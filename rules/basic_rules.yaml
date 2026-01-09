@@ -1,0 +1,17 @@
+rules:
+  - name: "Failed SSH Login"
+    severity: "high"
+    description: "Detects failed SSH login attempts."
+    keywords:
+      - "sshd"
+      - "Failed password"
+
+  - name: "Sudo Command Execution"
+    severity: "medium"
+    description: "Detects sudo command usage."
+    regex: "sudo:.*COMMAND="
+
+  - name: "Possible Web Attack (SQL Injection)"
+    severity: "critical"
+    description: "Detects common SQL injection patterns in logs."
+    regex: "SELECT.*FROM"

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini SOC Dashboard</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --text-color: #c9d1d9;
+            --border-color: #30363d;
+            --accent-color: #58a6ff;
+            --red: #da3633;
+            --orange: #bc8c00;
+            --green: #238636;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        h1 {
+            color: var(--accent-color);
+            margin: 0;
+        }
+
+        .status-badge {
+            background-color: var(--green);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--card-bg);
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: #21262d;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #21262d;
+        }
+
+        .severity-high, .severity-critical {
+            color: #ff7b72;
+            font-weight: bold;
+        }
+
+        .severity-medium {
+            color: #d29922;
+            font-weight: bold;
+        }
+
+        .severity-low, .severity-info {
+            color: #7ee787;
+        }
+
+        .timestamp {
+            color: #8b949e;
+            font-size: 0.9em;
+        }
+        
+        .no-alerts {
+            text-align: center;
+            padding: 20px;
+            color: #8b949e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛡️ Mini SOC Dashboard</h1>
+            <span class="status-badge">System Active</span>
+        </header>
+
+        <table id="alerts-table">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Severity</th>
+                    <th>Alert Name</th>
+                    <th>Raw Log</th>
+                </tr>
+            </thead>
+            <tbody id="alerts-body">
+                <!-- Alerts will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function fetchAlerts() {
+            fetch('/api/alerts')
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.getElementById('alerts-body');
+                    tbody.innerHTML = ''; // Clear current list
+
+                    if (data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="4" class="no-alerts">No alerts detected yet. Safe and sound!</td></tr>';
+                        return;
+                    }
+
+                    data.forEach(alert => {
+                        const row = document.createElement('tr');
+                        const date = new Date(alert.timestamp * 1000).toLocaleString();
+                        
+                        let severityClass = `severity-${alert.severity.toLowerCase()}`;
+                        
+                        row.innerHTML = `
+                            <td class="timestamp">${date}</td>
+                            <td class="${severityClass}">${alert.severity.toUpperCase()}</td>
+                            <td>${alert.alert_name}</td>
+                            <td style="font-family: monospace; font-size: 0.9em;">${alert.raw_log}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                })
+                .catch(err => console.error('Error loading alerts:', err));
+        }
+
+        // Poll every 2 seconds
+        setInterval(fetchAlerts, 2000);
+        fetchAlerts(); // Initial load
+    </script>
+</body>
+</html>
