@@ -41,13 +41,3 @@ This simulates a *basic SOC alerting pipeline* used in blue-team environments.
 ### 1. Install dependencies
 ```bash
 pip install -r requirements.txt
-
-
-
----
-
-## ▶️ How To Run
-
-### 1️⃣ Install dependencies
-''' ⁠bash
-pip install -r requirements.txt
