@@ -41,3 +41,23 @@ This simulates a *basic SOC alerting pipeline* used in blue-team environments.
 ### 1. Install dependencies
 ```bash
 pip install -r requirements.txt
+
+phython genrate_logs.py
+
+---
+
+## ⚠️ Limitations
+
+•⁠  ⁠This is a rule-based intrusion detection system (no machine learning).
+•⁠  ⁠Detection is limited to predefined patterns and rules.
+•⁠  ⁠Designed for learning and SOC workflow simulation, not production use.
+
+---
+
+## 🚧 Future Improvements
+
+•⁠  ⁠Add real-time log ingestion
+•⁠  ⁠Integrate MITRE ATT&CK technique mapping
+•⁠  ⁠Add alert severity levels
+•⁠  ⁠Export alerts to SIEM tools (ELK / Splunk)
+•⁠  ⁠Introduce behavioral or ML-based detection
